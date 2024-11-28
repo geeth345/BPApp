@@ -1,3 +1,5 @@
+package com.example.bloodpressuremonitorconnector
+
 // MainActivity.kt
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,6 +21,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.bloodpressuremonitorconnector.ui.home.HomeScreen
+import com.example.bloodpressuremonitorconnector.ui.setup.BleSetupScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,13 +54,18 @@ sealed class Screen(val route: String, val icon: @Composable () -> Unit, val lab
         icon = { Icon(Icons.Filled.Person, contentDescription = null) },
         label = "Profile"
     )
+    object BleSetup : Screen(
+        route = "ble_setup",
+        icon = { /* no icon */ },
+        label = "Bluetooth Setup"
+    )
 }
 
 @Preview
 @Composable
 fun BloodPressureApp() {
     val navController = rememberNavController()
-    val items = listOf(
+    val navbarItems = listOf(
         Screen.Home,
         Screen.Data,
         Screen.Insights,
@@ -69,7 +78,7 @@ fun BloodPressureApp() {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 
-                items.forEach { screen ->
+                navbarItems.forEach { screen ->
                     NavigationBarItem(
                         icon = screen.icon,
                         label = { Text(screen.label) },
@@ -90,21 +99,22 @@ fun BloodPressureApp() {
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController = navController, startDestination = Screen.Home.route) {
-                composable(Screen.Home.route) { HomeScreen() }
+                composable(Screen.Home.route) { HomeScreen(navController = navController) }
                 composable(Screen.Data.route) { DataScreen() }
                 composable(Screen.Insights.route) { InsightsScreen() }
                 composable(Screen.Profile.route) { ProfileScreen() }
+                composable(Screen.BleSetup.route) {
+                    BleSetupScreen(
+                        onSetupComplete = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
             }
         }
     }
 }
 
-@Composable
-fun HomeScreen() {
-    Surface(color = MaterialTheme.colorScheme.background) {
-        Text("Home Screen")
-    }
-}
 
 @Composable
 fun DataScreen() {
