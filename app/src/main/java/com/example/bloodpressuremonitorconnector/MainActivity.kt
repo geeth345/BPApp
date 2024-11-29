@@ -21,8 +21,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.bloodpressuremonitorconnector.ui.data.DataScreen
 import com.example.bloodpressuremonitorconnector.ui.home.HomeScreen
 import com.example.bloodpressuremonitorconnector.ui.setup.BleSetupScreen
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +102,7 @@ fun BloodPressureApp() {
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController = navController, startDestination = Screen.Home.route) {
                 composable(Screen.Home.route) { HomeScreen(navController = navController) }
-                composable(Screen.Data.route) { DataScreen() }
+                composable(Screen.Data.route) { DataScreen(navController = navController) }
                 composable(Screen.Insights.route) { InsightsScreen() }
                 composable(Screen.Profile.route) { ProfileScreen() }
                 composable(Screen.BleSetup.route) {
@@ -116,12 +118,6 @@ fun BloodPressureApp() {
 }
 
 
-@Composable
-fun DataScreen() {
-    Surface(color = MaterialTheme.colorScheme.background) {
-        Text("Data Screen")
-    }
-}
 
 @Composable
 fun InsightsScreen() {

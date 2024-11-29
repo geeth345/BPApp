@@ -15,7 +15,9 @@ import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionSta
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -28,11 +30,16 @@ class BleManager(
     private val _connectionState = MutableStateFlow<BleConnectionState>(BleConnectionState.Initial)
     val connectionState: StateFlow<BleConnectionState> = _connectionState.asStateFlow()
 
+    private val _sensorData = MutableStateFlow<Float>(0.0F)
+    val sensorData: SharedFlow<Float> = _sensorData.asSharedFlow()
+
+
     private var bluetoothGatt: BluetoothGatt? = null
     private var isScanning = false
     private var isRetrying = false
     private var retryCount = 0
     private val MAX_RETRY_ATTEMPTS = 3
+
 
     object BleConstants {
         const val SERVICE_UUID = "a5c298c0-a235-4a32-a4e9-5b42f6bd50e5"
@@ -114,8 +121,12 @@ class BleManager(
             if (characteristic.uuid.toString().equals(BleConstants.SENSOR_CHAR_UUID, ignoreCase = true)) {
                 // Convert byte array to Int16 array, since board sends 16-bit samples
                 val samples = value.toShortArray()
-                // Process your samples
-                // TODO: sample processing logic, emit via a flow, etc.
+                samples.forEach { sample ->
+                    val voltage = (sample.toFloat())
+                    coroutineScope.launch {
+                        _sensorData.emit(voltage)
+                    }
+                }
                 Log.d("BleManager", "Received ${samples.size} samples")
             }
         }

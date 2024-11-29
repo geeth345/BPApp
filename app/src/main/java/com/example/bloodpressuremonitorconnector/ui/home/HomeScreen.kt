@@ -1,23 +1,18 @@
 package com.example.bloodpressuremonitorconnector.ui.home
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
-
 
 @Composable
 fun HomeScreen(
@@ -31,33 +26,148 @@ fun HomeScreen(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            item {
+                // Device Status Card
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Device Status",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = when (connectionState) {
+                                is BleConnectionState.Initial -> "Device not connected"
+                                is BleConnectionState.Connected -> "Device connected"
+                                else -> "Setup Required"
+                            },
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = if (connectionState is BleConnectionState.Connected)
+                                MaterialTheme.colorScheme.primary
+                            else
+                                MaterialTheme.colorScheme.error
+                        )
+                        Button(
+                            onClick = { navController.navigate("ble_setup") },
+                            enabled = (connectionState is BleConnectionState.Connected).not(),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                if (connectionState is BleConnectionState.Connected)
+                                    "Device Connected"
+                                else "Connect Device"
+                            )
+                        }
+                    }
+                }
+            }
 
-            Text(
-                text = when (connectionState) {
-                    is BleConnectionState.Initial -> "Device not connected"
-                    is BleConnectionState.Connected -> "Device connected"
-                    else -> "Setup Required"
-                },
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (connectionState is BleConnectionState.Connected)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.error
-            )
+            item {
+                // Latest Measurements Card
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Latest Measurements",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        // Add your measurements display here
+                        Text(
+                            text = "No recent measurements",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
 
-            Button(
-                onClick = { navController.navigate("ble_setup") },
-                enabled = (connectionState is BleConnectionState.Connected).not()
-            ) {
-                Text(if (connectionState is BleConnectionState.Connected) "Device Connected" else "Connect Device")
+            item {
+                // Data Sharing Card
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { /* Navigate to sharing screen */ }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Share Data",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            text = "Share your measurements with healthcare providers",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+
+            item {
+                // Settings Card
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { /* Navigate to settings */ }
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Settings",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            text = "Configure app and device settings",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTopBar() {
+    TopAppBar(
+        title = {
+            Text(
+                text = "Blood Pressure Monitor",
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    )
 }
