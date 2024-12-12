@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -132,6 +133,7 @@ class BleManager(
         }
     }
 
+    // Helper function to convert byte array to Int16 array, matching output from board
     private fun ByteArray.toShortArray(): ShortArray {
         val shorts = ShortArray(size / 2)
         for (i in shorts.indices) {
@@ -209,8 +211,64 @@ class BleManager(
             _connectionState.value = BleConnectionState.BluetoothOff
             return
         }
+        // check existing connections
+        if (checkExistingConnections()) return
+
+        // If no existing connection found, start scanning
         startScan()
     }
+
+    private fun checkExistingConnections(): Boolean {
+        // Check for existing connections first
+        try {
+            val connectedDevices = bluetoothAdapter.bondedDevices.filter { device ->
+                device.name?.contains(BleConstants.DEVICE_NAME_PREFIX) == true
+            }
+
+            connectedDevices.forEach { device ->
+                // Get the connection state for this device
+                val isConnected = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)
+                    .getConnectionState(device, BluetoothProfile.GATT)
+
+                if (isConnected == BluetoothProfile.STATE_CONNECTED) {
+                    Log.d("BleManager", "Found already connected device: ${device.address}")
+                    handleExistingConnection(device)
+                    return true
+                }
+            }
+        } catch (e: SecurityException) {
+            Log.e("BleManager", "Security exception checking existing connections", e)
+        }
+        return false
+    }
+
+    private fun handleExistingConnection(device: BluetoothDevice) {
+        try {
+            _connectionState.value = BleConnectionState.DeviceFound(device.address)
+
+            // Create a new GATT connection to the already-connected device
+            bluetoothGatt = device.connectGatt(
+                context,
+                false,
+                gattCallback,
+                BluetoothDevice.TRANSPORT_LE
+            )
+
+            // Optional: Set a timeout for the GATT connection
+            coroutineScope.launch {
+                delay(5000) // 5 second timeout
+                if (_connectionState.value !is BleConnectionState.Connected) {
+                    Log.e("BleManager", "Timeout connecting to existing device")
+                    cleanup()
+                    startScan() // Fall back to normal scanning
+                }
+            }
+        } catch (e: SecurityException) {
+            Log.e("BleManager", "Security exception handling existing connection", e)
+            _connectionState.value = BleConnectionState.Error("Permission denied")
+        }
+    }
+
 
     private fun startScan() {
         if (isScanning) return
