@@ -1,10 +1,9 @@
-package com.example.bloodpressuremonitorconnector.ui.data
+package com.example.bloodpressuremonitorconnector.ui.debug_data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
 import com.example.bloodpressuremonitorconnector.utils.BleContainer
-import com.example.bloodpressuremonitorconnector.utils.BleManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

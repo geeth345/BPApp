@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bloodpressuremonitorconnector.ui.data.DataScreen
+import com.example.bloodpressuremonitorconnector.ui.debug_data.DataScreen
 import com.example.bloodpressuremonitorconnector.ui.home.HomeScreen
 import com.example.bloodpressuremonitorconnector.ui.settings.SettingsScreen
 import com.example.bloodpressuremonitorconnector.ui.setup.BleSetupScreen
