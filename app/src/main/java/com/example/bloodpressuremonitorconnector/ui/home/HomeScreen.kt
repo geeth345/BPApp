@@ -130,7 +130,7 @@ fun HomeScreen(
                 // Settings Card
                 ElevatedCard(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { /* Navigate to settings */ }
+                    onClick = { navController.navigate("settings") }
                 ) {
                     Column(
                         modifier = Modifier
