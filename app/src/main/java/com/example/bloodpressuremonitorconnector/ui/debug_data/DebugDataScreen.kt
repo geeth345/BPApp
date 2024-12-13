@@ -21,9 +21,9 @@ import com.patrykandpatrick.vico.core.entry.FloatEntry
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
-fun DataScreen(
+fun DebugDataScreen(
     navController: NavController,
-    viewModel: DataViewModel = viewModel(),
+    viewModel: DebugDataViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()

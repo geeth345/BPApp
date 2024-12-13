@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Insights
 import androidx.compose.material.icons.filled.MonitorHeart
@@ -22,7 +23,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.bloodpressuremonitorconnector.ui.debug_data.DataScreen
+import com.example.bloodpressuremonitorconnector.ui.data.DataScreen
+import com.example.bloodpressuremonitorconnector.ui.debug_data.DebugDataScreen
 import com.example.bloodpressuremonitorconnector.ui.home.HomeScreen
 import com.example.bloodpressuremonitorconnector.ui.settings.SettingsScreen
 import com.example.bloodpressuremonitorconnector.ui.setup.BleSetupScreen
@@ -43,9 +45,9 @@ sealed class Screen(val route: String, val icon: @Composable () -> Unit, val lab
         icon = { Icon(Icons.Filled.Home, contentDescription = "Home Screen") },
         label = "Home"
     )
-    object Data : Screen(
-        route = "data",
-        icon = { Icon(Icons.Filled.MonitorHeart, contentDescription = "Data Screen") },
+    object DebugData : Screen(
+        route = "debug_data",
+        icon = { Icon(Icons.Filled.Code, contentDescription = "Debugging Screen") },
         label = "Data"
     )
     object Insights : Screen(
@@ -67,6 +69,11 @@ sealed class Screen(val route: String, val icon: @Composable () -> Unit, val lab
         route = "ble_setup",
         icon = { /* no icon */ },
         label = "Bluetooth Setup"
+    )
+    object Data : Screen(
+        route = "data",
+        icon = { Icon(Icons.Filled.MonitorHeart, contentDescription = "Data Screen") },
+        label = "Data"
     )
 }
 

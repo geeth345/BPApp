@@ -22,7 +22,7 @@ data class DataScreenState(
     val minValue: Float = Float.MAX_VALUE
 )
 
-class DataViewModel : ViewModel() {
+class DebugDataViewModel : ViewModel() {
     private val bleManager = BleContainer.getBleManager()
     private val maxDataPoints = 1000 // Keep last 1000 points for display
 
