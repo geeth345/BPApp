@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bloodpressuremonitorconnector.navigateWithBottomBar
 import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
 
 @Composable
@@ -120,7 +121,7 @@ fun HomeScreen(
 
             item {
                 // Insights text card
-                ElevatedCard(onClick = { navController.navigate("insights") }) {
+                ElevatedCard(onClick = { navController.navigateWithBottomBar("insights") }) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -170,7 +171,7 @@ fun HomeScreen(
                 // Settings Card
                 ElevatedCard(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { navController.navigate("settings") }
+                    onClick = { navController.navigateWithBottomBar("settings") }
                 ) {
                     Column(
                         modifier = Modifier
