@@ -31,7 +31,8 @@ import java.util.Locale
 @Composable
 fun BPChartCard(
     readings: List<BPReading>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    title: String = "Chart"
 ) {
     // Sort readings by timestamp to ensure proper chronological order
     val sortedReadings = remember(readings) {
@@ -52,9 +53,9 @@ fun BPChartCard(
     // Date formatter for x-axis labels
     val dateFormatter = remember { SimpleDateFormat("MMM dd", Locale.getDefault()) }
 
-    Card(
+    ElevatedCard(
         modifier = modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        // elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             modifier = Modifier
@@ -62,7 +63,7 @@ fun BPChartCard(
                 .fillMaxWidth()
         ) {
             Text(
-                text = "Blood Pressure Readings",
+                text = title,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
             )

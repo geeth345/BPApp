@@ -15,9 +15,11 @@ import com.example.bloodpressuremonitorconnector.Screen
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    viewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
     modifier: Modifier = Modifier
 ) {
+    val viewModel: SettingsViewModel = viewModel(
+        factory = SettingsViewModel.Factory
+    )
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(

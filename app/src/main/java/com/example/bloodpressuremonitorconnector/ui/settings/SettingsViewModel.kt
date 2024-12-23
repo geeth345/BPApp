@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bloodpressuremonitorconnector.BloodPressureMonitorApplication
+import com.example.bloodpressuremonitorconnector.utils.SettingsContainer
 import com.example.bloodpressuremonitorconnector.utils.SettingsManager
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -63,9 +64,8 @@ class SettingsViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BloodPressureMonitorApplication)
                 SettingsViewModel(
-                    settingsManager = application.settingsManager
+                    settingsManager = SettingsContainer.getSettingsManager()
                 )
             }
         }

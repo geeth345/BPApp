@@ -3,13 +3,10 @@ package com.example.bloodpressuremonitorconnector
 import android.app.Application
 import android.util.Log
 import com.example.bloodpressuremonitorconnector.utils.BleContainer
-import com.example.bloodpressuremonitorconnector.utils.SettingsManager
+import com.example.bloodpressuremonitorconnector.utils.SettingsContainer
 
 // BloodPressureMonitorApplication.kt
 class BloodPressureMonitorApplication : Application() {
-
-    lateinit var settingsManager: SettingsManager
-        private set
 
     override fun onCreate() {
         super.onCreate()
@@ -18,6 +15,7 @@ class BloodPressureMonitorApplication : Application() {
         BleContainer.initialize(this)
         Log.d("BloodPressureMonitorApplication", "BleContainer initialized")
         Log.d("BloodPressureMonitorApplication", "Initialsiing SettingsManager")
-        settingsManager = SettingsManager(this)
+        SettingsContainer.initialize(this)
+
     }
 }

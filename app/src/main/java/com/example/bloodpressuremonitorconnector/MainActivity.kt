@@ -118,6 +118,7 @@ fun BloodPressureApp() {
             NavHost(navController = navController, startDestination = Screen.Home.route) {
                 composable(Screen.Home.route) { HomeScreen(navController = navController) }
                 composable(Screen.Data.route) { DataScreen(navController = navController) }
+                composable(Screen.DebugData.route) { DebugDataScreen(navController = navController) }
                 composable(Screen.Insights.route) { InsightsScreen() }
                 composable(Screen.Profile.route) { ProfileScreen() }
                 composable(Screen.Settings.route) { SettingsScreen(navController = navController) }
