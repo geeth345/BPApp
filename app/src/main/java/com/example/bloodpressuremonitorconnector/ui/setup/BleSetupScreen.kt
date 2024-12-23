@@ -24,7 +24,7 @@ fun BleSetupScreen(
 ) {
     val context = LocalContext.current
     val viewModel: BleSetupViewModel = viewModel(
-        factory = remember(context) { BleSetupViewModelFactory(context) }
+        factory = BleSetupViewModel.Factory
     )
 
     val connectionState by viewModel.connectionState.collectAsState()

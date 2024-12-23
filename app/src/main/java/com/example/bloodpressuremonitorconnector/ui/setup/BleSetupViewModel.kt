@@ -5,6 +5,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.bloodpressuremonitorconnector.BloodPressureMonitorApplication
 import com.example.bloodpressuremonitorconnector.utils.BleManager
 import com.example.bloodpressuremonitorconnector.utils.BlePermissionsManager
 import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
@@ -68,20 +71,34 @@ class BleSetupViewModel(
         //bleManager.cleanup()
         super.onCleared()
     }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as BloodPressureMonitorApplication)
+                BleSetupViewModel(
+                    bleManager = BleContainer.getBleManager(),
+                    permissionsManager = BlePermissionsManager(application)
+                )
+            }
+        }
+    }
+
+
 }
 
-class BleSetupViewModelFactory(
-    private val context: Context
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(BleSetupViewModel::class.java)) {
-            val permissionsManager = BlePermissionsManager(context)
-            return BleSetupViewModel(
-                bleManager = BleContainer.getBleManager(),
-                permissionsManager = permissionsManager
-            ) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
+//class BleSetupViewModelFactory(
+//    private val context: Context
+//) : ViewModelProvider.Factory {
+//    @Suppress("UNCHECKED_CAST")
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(BleSetupViewModel::class.java)) {
+//            val permissionsManager = BlePermissionsManager(context)
+//            return BleSetupViewModel(
+//                bleManager = BleContainer.getBleManager(),
+//                permissionsManager = permissionsManager
+//            ) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel class")
+//    }
+//}
