@@ -4,9 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.bloodpressuremonitorconnector.db.BPDataRepository
-import com.example.bloodpressuremonitorconnector.db.BPReading
+import com.example.bloodpressuremonitorconnector.data.BPDataRepository
+import com.example.bloodpressuremonitorconnector.data.BPReading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

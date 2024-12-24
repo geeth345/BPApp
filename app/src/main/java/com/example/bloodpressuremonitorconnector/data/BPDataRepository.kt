@@ -1,16 +1,15 @@
-package com.example.bloodpressuremonitorconnector.db
+package com.example.bloodpressuremonitorconnector.data
 
 import android.content.Context
-import com.example.bloodpressuremonitorconnector.db.BPReading
 
 class BPDataRepository(
     private val context: Context
 ) {
     /*
-    Class to handle the data repository for the blood pressure readings, and also the mock
-    data when in debug mode.
+    Class to handle the data operations for the blood pressure readings, and also the mock
+    data when in debug mode. Essentially a bridge between the dao and the rest of the
+    application.
      */
-
     fun loadMockData(): List<BPReading> {
         return try {
             context.assets.open("fake_bp_readings.csv").bufferedReader().useLines { lines ->
