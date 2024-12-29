@@ -15,10 +15,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
+    navController: NavController,
     viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -46,7 +48,7 @@ fun ProfileScreen(
                     ) {
                         // Profile Picture
                         Icon(
-                            imageVector = Icons.Default.Person,
+                            imageVector = Icons.Default.Person, // TODO: Replace with actual image
                             contentDescription = "Profile Picture",
                             modifier = Modifier
                                 .size(120.dp)
@@ -97,7 +99,7 @@ fun ProfileScreen(
                         )
 
                         Text(
-                            text = "Primary Physician: ${uiState.doctorName}",
+                            text = "General Practitioner: ${uiState.doctorName}",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -175,6 +177,7 @@ private fun EditableInformation(
     onSave: (name: String, email: String, heightCm: Int, weightKg: Int) -> Unit
 ) {
     var name by remember { mutableStateOf(uiState.name) }
+    var phone by remember { mutableStateOf(uiState.phone) }
     var email by remember { mutableStateOf(uiState.email) }
     var height by remember { mutableStateOf(uiState.heightCm.toString()) }
     var weight by remember { mutableStateOf(uiState.weightKg.toString()) }
@@ -184,6 +187,13 @@ private fun EditableInformation(
             value = name,
             onValueChange = { name = it },
             label = { Text("Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        OutlinedTextField(
+            value = phone,
+            onValueChange = { phone = it },
+            label = { Text("Phone") },
             modifier = Modifier.fillMaxWidth()
         )
 

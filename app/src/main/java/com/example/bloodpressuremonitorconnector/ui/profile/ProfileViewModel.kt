@@ -16,8 +16,9 @@ import kotlinx.coroutines.launch
 data class ProfileUiState(
     val name: String = "John Doe",
     val email: String = "john.doe@example.com",
-    val medicalPractice: String = "City General Hospital",
-    val doctorName: String = "Dr. Sarah Smith",
+    val phone: String = "000 0000 0000",
+    val medicalPractice: String = "University Health Service",
+    val doctorName: String = "Dr. Meredith Grey",
     val heightCm: Int = 175,
     val weightKg: Int = 70,
     val birthDate: String = "1980-01-01",
