@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,12 +27,15 @@ fun DataScreen(
     modifier: Modifier = Modifier
 ) {
     val readings by viewModel.readings.collectAsState()
+    val dayReadings by viewModel.dayReadings.collectAsState()
+    val weekReadings by viewModel.weekReadings.collectAsState()
+    val yearReadings by viewModel.yearReadings.collectAsState()
 
-    // Load data when the screen is first displayed
-    val context = LocalContext.current
-    LaunchedEffect(context) {
-        viewModel.loadData(context)
-    }
+//    // Load data when the screen is first displayed
+//    val context = LocalContext.current
+//    LaunchedEffect(context) {
+//        viewModel.loadData(context)
+//    }
 
     Surface(
         modifier = modifier.fillMaxSize()
@@ -43,6 +47,11 @@ fun DataScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
+                Button(onClick = viewModel::loadData) {
+                    Text("Refresh")
+                }
+            }
+            item {
                 Text(
                     text = "Blood Pressure Readings",
                     style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
@@ -52,21 +61,21 @@ fun DataScreen(
             item {
                 BPChartCard(
                     title = "Past Day",
-                    readings = readings,
+                    readings = dayReadings,
                     modifier = Modifier.fillMaxSize()
                 )
             }
             item {
                 BPChartCard(
                     title = "Past Week",
-                    readings = readings,
+                    readings = weekReadings,
                     modifier = Modifier.fillMaxSize()
                 )
             }
             item {
                 BPChartCard(
                     title = "Past Year",
-                    readings = readings,
+                    readings = yearReadings,
                     modifier = Modifier.fillMaxSize()
                 )
             }

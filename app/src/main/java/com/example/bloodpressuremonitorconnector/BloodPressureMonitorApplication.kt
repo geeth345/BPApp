@@ -14,8 +14,10 @@ class BloodPressureMonitorApplication : Application() {
         Log.d("BloodPressureMonitorApplication", "Initializing BleContainer")
         BleContainer.initialize(this)
         Log.d("BloodPressureMonitorApplication", "BleContainer initialized")
-        Log.d("BloodPressureMonitorApplication", "Initialsiing SettingsManager")
+        Log.d("BloodPressureMonitorApplication", "Initialzing SettingsManager")
         SettingsContainer.initialize(this)
+        Log.d("BloodPressureMonitorApplication", "SettingsManager initialised")
+        Log.d("BloodPressureMonitorApplication", "Initialisation complete")
 
     }
 }

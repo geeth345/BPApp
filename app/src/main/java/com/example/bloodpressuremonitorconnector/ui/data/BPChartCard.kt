@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
@@ -14,6 +15,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.bloodpressuremonitorconnector.data.BPReading
+import com.hd.charts.LineChartView
+import com.hd.charts.common.model.MultiChartDataSet
+import com.hd.charts.style.ChartViewDefaults
+import com.hd.charts.style.LineChartDefaults
 import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
 import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -23,8 +28,7 @@ import com.patrykandpatrick.vico.core.entry.entryOf
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-// A Composable function that displays a card with a graph of blood pressure readings
-// Using Vico
+
 @Composable
 fun BPChartCard(
     readings: List<BPReading>,
@@ -36,23 +40,23 @@ fun BPChartCard(
         readings.sortedBy { it.timestamp }
     }
 
-    // Create chart entries for systolic and diastolic readings
-    val chartEntryModel = remember(sortedReadings) {
-        val systolicEntries = sortedReadings.mapIndexed { index, reading ->
-            entryOf(index.toFloat(), reading.systolic.toFloat())
-        }
-        val diastolicEntries = sortedReadings.mapIndexed { index, reading ->
-            entryOf(index.toFloat(), reading.diastolic.toFloat())
-        }
-        entryModelOf(systolicEntries, diastolicEntries)
+    val chartDataSet = remember(sortedReadings) {
+        val items = listOf(
+            "Systolic" to sortedReadings.map { it.systolic.toFloat() },
+            "Diastolic" to sortedReadings.map { it.diastolic.toFloat() }
+        )
+        MultiChartDataSet(
+            items = items,
+            postfix = "mmHg",
+            categories = sortedReadings.map { it.timestamp.toString() },
+            title = title
+        )
     }
 
-    // Date formatter for x-axis labels
-    val dateFormatter = remember { SimpleDateFormat("MMM dd", Locale.getDefault()) }
+
 
     ElevatedCard(
-        modifier = modifier.fillMaxWidth(),
-        // elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        modifier = modifier.fillMaxWidth()
     ) {
         Column(
             modifier = Modifier
@@ -65,45 +69,19 @@ fun BPChartCard(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            Chart(
-                chart = lineChart(),
-                model = chartEntryModel,
-                startAxis = rememberStartAxis(),
-                bottomAxis = rememberBottomAxis()
+            LineChartView(
+                dataSet = chartDataSet,
+                style = LineChartDefaults.style(
+                    lineColors = listOf(
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.secondary
+                    ),
+                    dragPointVisible = false,
+                    pointVisible = true,
+                    pointSize = 6f,
+                    chartViewStyle = ChartViewDefaults.style()
+                )
             )
-
-            // Legend
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .background(MaterialTheme.colorScheme.primary)
-                    )
-                    Text(
-                        text = "Systolic",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
-                }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .background(MaterialTheme.colorScheme.secondary)
-                    )
-                    Text(
-                        text = "Diastolic",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
-                }
-            }
         }
     }
 }

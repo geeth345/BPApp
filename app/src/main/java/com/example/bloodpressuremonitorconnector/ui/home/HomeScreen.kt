@@ -15,6 +15,9 @@ import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bloodpressuremonitorconnector.navigateWithBottomBar
 import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomeScreen(
@@ -25,6 +28,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val connectionState by viewModel.deviceConnectionState.collectAsState()
+
+    val latestReading by viewModel.latestReading.collectAsState()
 
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -107,14 +112,56 @@ fun HomeScreen(
                     ) {
                         Text(
                             text = "Latest Measurements",
-                            style = MaterialTheme.typography.titleLarge
+                            style = MaterialTheme.typography.titleLarge,
                         )
-                        // Add your measurements display here
-                        Text(
-                            text = "No recent measurements",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        when (latestReading) {
+                            null -> {
+                                Text(
+                                    text = "No measurements available, please connect a device or" +
+                                            "login to load data",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            else -> {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = latestReading?.systolic?.toString()?: "?",
+                                            style = MaterialTheme.typography.headlineMedium,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                        Text(
+                                            text = "Systolic",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = latestReading?.diastolic?.toString()?: "?",
+                                            style = MaterialTheme.typography.headlineMedium,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                        Text(
+                                            text = "Diastolic",
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                }
+                                val instant = Instant.ofEpochMilli(latestReading!!.timestamp)
+                                val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")
+                                    .withZone(ZoneId.systemDefault())
+                                Text(
+                                    text = "Measured at: ${formatter.format(instant)}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -219,11 +266,39 @@ fun HomeScreen(
 
                     }
                 }
+
+                item {
+                    // load mock data from csv
+                    ElevatedCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = { viewModel.loadMockData() }
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Load Mock Data",
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Text(
+                                text = "Tap to load mock data into the database for testing purposes",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                    }
+                }
             }
 
         }
     }
 }
+
+
 
 //@OptIn(ExperimentalMaterial3Api::class)
 //@Composable

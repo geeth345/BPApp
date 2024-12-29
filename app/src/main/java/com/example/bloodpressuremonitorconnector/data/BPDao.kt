@@ -23,6 +23,10 @@ interface BPDao {
     @Query("SELECT * FROM bp_readings WHERE timestamp BETWEEN :startTime AND :endTime ORDER BY timestamp ASC")
     suspend fun getReadingsInRange(startTime: Long, endTime: Long): List<BPReading>
 
+    // Get all readings
+    @Query("SELECT * FROM bp_readings ORDER BY timestamp ASC")
+    suspend fun getAllReadings(): List<BPReading>
+
     // Insert single reading
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertReading(reading: BPReading)
