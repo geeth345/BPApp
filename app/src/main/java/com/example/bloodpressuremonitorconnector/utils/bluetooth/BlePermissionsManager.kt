@@ -1,6 +1,6 @@
-package com.example.bloodpressuremonitorconnector.utils
+package com.example.bloodpressuremonitorconnector.utils.bluetooth
 
-import com.example.bloodpressuremonitorconnector.ui.setup.state.BlePermissionState
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BlePermissionState
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager

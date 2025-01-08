@@ -1,4 +1,4 @@
-package com.example.bloodpressuremonitorconnector.utils
+package com.example.bloodpressuremonitorconnector.utils.bluetooth
 
 import android.content.Context
 import android.bluetooth.BluetoothAdapter
@@ -11,8 +11,9 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import android.content.Intent
 import android.util.Log
-import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BleConnectionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,6 +49,15 @@ class BleManager(
         const val DEVICE_NAME_PREFIX = "Group12"
     }
 
+    private fun startForegroundService() {
+        val serviceIntent = Intent(context, BleService::class.java)
+        context.startForegroundService(serviceIntent)
+    }
+
+    private fun stopForegroundService() {
+        context.stopService(Intent(context, BleService::class.java))
+    }
+
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             try {
@@ -71,6 +81,7 @@ class BleManager(
             when (newState) {
                 BluetoothProfile.STATE_CONNECTED -> {
                     Log.d("BleManager", "Connected to GATT server")
+                    startForegroundService()
                     try {
                         // Request a higher connection priority for more stable connection
                         gatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH)
@@ -82,6 +93,8 @@ class BleManager(
                     }
                 }
                 BluetoothProfile.STATE_DISCONNECTED -> {
+                    Log.d("BleManager", "Disconnected from GATT server")
+                    stopForegroundService()
                     when (status) {
                         19 -> { // GATT_CONN_TERMINATE_PEER_USER
                             if (retryCount < MAX_RETRY_ATTEMPTS && !isRetrying) {

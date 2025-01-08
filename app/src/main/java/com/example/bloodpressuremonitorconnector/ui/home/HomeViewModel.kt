@@ -9,14 +9,12 @@ import com.example.bloodpressuremonitorconnector.BloodPressureMonitorApplication
 import com.example.bloodpressuremonitorconnector.data.BPDao
 import com.example.bloodpressuremonitorconnector.data.BPDatabase
 import com.example.bloodpressuremonitorconnector.data.BPReading
-import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
-import com.example.bloodpressuremonitorconnector.utils.BleContainer
-import com.example.bloodpressuremonitorconnector.utils.BleManager
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BleConnectionState
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.BleContainer
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.BleManager
 import com.example.bloodpressuremonitorconnector.utils.SettingsContainer
 import com.example.bloodpressuremonitorconnector.utils.SettingsManager
 import com.example.bloodpressuremonitorconnector.data.MockDataLoader
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bloodpressuremonitorconnector.navigateWithBottomBar
-import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BleConnectionState
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter

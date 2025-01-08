@@ -14,8 +14,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
-import com.example.bloodpressuremonitorconnector.ui.setup.state.BlePermissionState
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BleConnectionState
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BlePermissionState
 
 @Composable
 fun BleSetupScreen(

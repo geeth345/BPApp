@@ -1,4 +1,4 @@
-package com.example.bloodpressuremonitorconnector.utils
+package com.example.bloodpressuremonitorconnector.utils.bluetooth
 
 import android.bluetooth.BluetoothManager
 import android.content.Context

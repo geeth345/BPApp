@@ -1,21 +1,16 @@
 package com.example.bloodpressuremonitorconnector.ui.setup
 
-import android.bluetooth.BluetoothManager
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bloodpressuremonitorconnector.BloodPressureMonitorApplication
-import com.example.bloodpressuremonitorconnector.utils.BleManager
-import com.example.bloodpressuremonitorconnector.utils.BlePermissionsManager
-import com.example.bloodpressuremonitorconnector.ui.setup.state.BleConnectionState
-import com.example.bloodpressuremonitorconnector.ui.setup.state.BlePermissionState
-import com.example.bloodpressuremonitorconnector.utils.BleContainer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.BleManager
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.BlePermissionsManager
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BleConnectionState
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BlePermissionState
+import com.example.bloodpressuremonitorconnector.utils.bluetooth.BleContainer
 import kotlinx.coroutines.flow.MutableStateFlow
 
 import kotlinx.coroutines.flow.asStateFlow

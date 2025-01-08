@@ -1,4 +1,4 @@
-package com.example.bloodpressuremonitorconnector.ui.setup.state
+package com.example.bloodpressuremonitorconnector.utils.bluetooth.state
 
 
 // Represents the current state of permissions
