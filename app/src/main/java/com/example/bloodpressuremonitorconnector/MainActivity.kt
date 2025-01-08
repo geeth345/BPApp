@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bloodpressuremonitorconnector.ui.data.DataScreen
 import com.example.bloodpressuremonitorconnector.ui.debug_data.DebugDataScreen
 import com.example.bloodpressuremonitorconnector.ui.home.HomeScreen
+import com.example.bloodpressuremonitorconnector.ui.insights.InsightsScreen
 import com.example.bloodpressuremonitorconnector.ui.profile.ProfileScreen
 import com.example.bloodpressuremonitorconnector.ui.settings.SettingsScreen
 import com.example.bloodpressuremonitorconnector.ui.setup.BleSetupScreen
@@ -115,8 +116,8 @@ fun BloodPressureApp() {
                 composable(Screen.Home.route) { HomeScreen(navController = navController) }
                 composable(Screen.Data.route) { DataScreen(navController = navController) }
                 composable(Screen.DebugData.route) { DebugDataScreen(navController = navController) }
-                composable(Screen.Insights.route) { InsightsScreen() }
-                composable(Screen.Profile.route) { ProfileScreen() }
+                composable(Screen.Insights.route) { InsightsScreen(navController = navController) }
+                composable(Screen.Profile.route) { ProfileScreen(navController = navController) }
                 composable(Screen.Settings.route) { SettingsScreen(navController = navController) }
                 composable(Screen.BleSetup.route) {
                     BleSetupScreen(
@@ -138,13 +139,5 @@ fun NavController.navigateWithBottomBar(route: String) {
         }
         launchSingleTop = true
         restoreState = true
-    }
-}
-
-
-@Composable
-fun InsightsScreen() {
-    Surface(color = MaterialTheme.colorScheme.background) {
-        Text("Insights Screen")
     }
 }
