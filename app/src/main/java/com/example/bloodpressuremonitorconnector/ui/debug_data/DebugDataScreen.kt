@@ -1,5 +1,6 @@
 package com.example.bloodpressuremonitorconnector.ui.debug_data
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -9,16 +10,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BleConnectionState
-import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.core.entry.FloatEntry
-import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
 fun DebugDataScreen(
@@ -73,17 +72,8 @@ fun DebugDataScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         } else {
-                            val entries = uiState.dataPoints.mapIndexed { index, point ->
-                                FloatEntry(index.toFloat(), point.value)
-                            }
-
-                            Chart(
-                                chart = lineChart(),
-                                model = entryModelOf(entries),
-                                startAxis = rememberStartAxis(
-                                    valueFormatter = { value, _ -> value.toInt().toString() }
-                                ),
-                                bottomAxis = rememberBottomAxis(),
+                            SimpleLineChart(
+                                dataPoints = uiState.dataPoints,
                                 modifier = Modifier.fillMaxSize()
                             )
                         }
@@ -97,6 +87,29 @@ fun DebugDataScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
+
+                when (uiState.isRecording) {
+                    true -> {
+                        FilledTonalButton(
+                            onClick = { viewModel.stopRecording() }
+                        ) {
+                            Icon(Icons.Default.Clear, contentDescription = "Pause")
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Pause")
+                        }
+
+                    }
+                    false -> {
+                        FilledTonalButton(
+                            onClick = { viewModel.startRecording()}
+                        ) {
+                            Icon(Icons.Default.Clear, contentDescription = "Resume")
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Resume")
+                        }
+                    }
+                }
 
                 FilledTonalButton(
                     onClick = { viewModel.clearData() }
@@ -134,6 +147,42 @@ fun DebugDataScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SimpleLineChart(
+    dataPoints: List<DataPoint>,
+    modifier: Modifier = Modifier,
+    lineColor: Color = MaterialTheme.colorScheme.primary
+) {
+    Canvas(modifier = modifier) {
+        if (dataPoints.size < 2) return@Canvas
+
+        val width = size.width
+        val height = size.height
+        val maxValue = dataPoints.maxOf { it.value }
+        val minValue = dataPoints.minOf { it.value }
+        val valueRange = maxValue - minValue
+
+        // Draw the line
+        val path = Path()
+        dataPoints.forEachIndexed { index, point ->
+            val x = (index.toFloat() / (dataPoints.size - 1)) * width
+            val y = height - ((point.value - minValue) / valueRange * height)
+
+            if (index == 0) {
+                path.moveTo(x, y)
+            } else {
+                path.lineTo(x, y)
+            }
+        }
+
+        drawPath(
+            path = path,
+            color = lineColor,
+            style = Stroke(width = 2f)
+        )
     }
 }
 

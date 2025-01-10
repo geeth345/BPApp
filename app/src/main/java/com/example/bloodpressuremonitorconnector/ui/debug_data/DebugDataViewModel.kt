@@ -24,7 +24,7 @@ data class DataScreenState(
 
 class DebugDataViewModel : ViewModel() {
     private val bleManager = BleContainer.getBleManager()
-    private val maxDataPoints = 1000 // Keep last 1000 points for display
+    private val maxDataPoints = 2000 // Keep last 1000 points for display
 
     private val _uiState = MutableStateFlow(DataScreenState())
     val uiState: StateFlow<DataScreenState> = _uiState.asStateFlow()
@@ -66,6 +66,8 @@ class DebugDataViewModel : ViewModel() {
 
     // Add a new data point
     fun addDataPoint(value: Float) {
+        // quick and dirty start/stop functionality
+        if (!_uiState.value.isRecording) return
         val currentPoints = _uiState.value.dataPoints.toMutableList()
         if (currentPoints.size >= maxDataPoints) {
             currentPoints.removeFirst()
