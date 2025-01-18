@@ -61,10 +61,10 @@ chaquopy {
     defaultConfig {
         version = "3.8"
         pip {
-            options("--extra-index-url", "https://chaquo.com/pypi-13.1")
-            install("numpy==1.24.3")
-            install("scipy==1.10.1")
-            install("scikit-learn==1.2.2")
+            options("--extra-index-url", "https://chaquo.com/pypi-extra/")
+            install("numpy==1.20.3")
+            install("scipy==1.6.3")
+            install("scikit-learn==1.1.3")
         }
 
 
