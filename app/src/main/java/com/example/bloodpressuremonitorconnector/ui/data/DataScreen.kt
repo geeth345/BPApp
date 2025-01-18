@@ -2,10 +2,13 @@ package com.example.bloodpressuremonitorconnector.ui.data
 
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,6 +33,7 @@ fun DataScreen(
     val dayReadings by viewModel.dayReadings.collectAsState()
     val weekReadings by viewModel.weekReadings.collectAsState()
     val yearReadings by viewModel.yearReadings.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
 //    // Load data when the screen is first displayed
 //    val context = LocalContext.current
@@ -40,17 +44,27 @@ fun DataScreen(
     Surface(
         modifier = modifier.fillMaxSize()
     ) {
-        LazyColumn (
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                Button(onClick = viewModel::loadData) {
-                    Text("Refresh")
+                Button(
+                    onClick = viewModel::loadData,
+                    enabled = !isLoading
+                ) {
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    } else {
+                        Text("Refresh")
+                    }
                 }
             }
+
             item {
                 Text(
                     text = "Blood Pressure Readings",
@@ -58,26 +72,42 @@ fun DataScreen(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
             }
-            item {
-                BPChartCard(
-                    title = "Past Day",
-                    readings = dayReadings,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            item {
-                BPChartCard(
-                    title = "Past Week",
-                    readings = weekReadings,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            item {
-                BPChartCard(
-                    title = "Past Year",
-                    readings = yearReadings,
-                    modifier = Modifier.fillMaxSize()
-                )
+
+            if (isLoading) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        contentAlignment = androidx.compose.ui.Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+            } else {
+                item {
+                    BPChartCard(
+                        title = "Past Day",
+                        readings = dayReadings,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                item {
+                    BPChartCard(
+                        title = "Past Week",
+                        readings = weekReadings,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                item {
+                    BPChartCard(
+                        title = "Past Year",
+                        readings = yearReadings,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
         }
     }

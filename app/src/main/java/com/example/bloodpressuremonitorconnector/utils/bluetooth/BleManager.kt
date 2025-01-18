@@ -23,6 +23,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+/*
+The BleManager class is responsible for managing the Bluetooth Low Energy (BLE) connection to the sensor device.
+It handles scanning for the device, connecting to it, subscribing to the data characteristic and receiving sensor data.
+Designed to be used as a singleton, contained in BleContainer. Other parts of the app can access the BleManager instance
+by calling BleContainer.getBleManager().
+ */
 
 class BleManager(
     private val context: Context,
@@ -321,6 +327,7 @@ class BleManager(
 
     fun cleanup() {
         try {
+            Log.d("BleManager", "Cleaning up resources")
             isScanning = false
             bluetoothAdapter.bluetoothLeScanner?.stopScan(scanCallback)
             bluetoothGatt?.let { gatt ->

@@ -20,6 +20,9 @@ import kotlinx.coroutines.launch
 class DataViewModel(
     private val bpDao: BPDao
 ) : ViewModel() {
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private val _readings = MutableStateFlow<List<BPReading>>(emptyList())
     val readings: StateFlow<List<BPReading>> = _readings.asStateFlow()
 
@@ -44,31 +47,36 @@ class DataViewModel(
 
     fun loadData() {
         viewModelScope.launch {
-            val currentTime = System.currentTimeMillis()
+            try {
+                _isLoading.value = true
+                val currentTime = System.currentTimeMillis()
 
-            // Hourly averages for past day
-            val dayStartTime = currentTime - TimeConstants.MILLIS_PER_DAY
-            _dayReadings.value = getAverageIntervalReadings(
-                dayStartTime,
-                currentTime,
-                TimeConstants.MILLIS_PER_HOUR
-            )
+                // Hourly averages for past day
+                val dayStartTime = currentTime - TimeConstants.MILLIS_PER_DAY
+                _dayReadings.value = getAverageIntervalReadings(
+                    dayStartTime,
+                    currentTime,
+                    TimeConstants.MILLIS_PER_HOUR
+                )
 
-            // Daily averages for past week
-            val weekStartTime = currentTime - (7 * TimeConstants.MILLIS_PER_DAY)
-            _weekReadings.value = getAverageIntervalReadings(
-                weekStartTime,
-                currentTime,
-                TimeConstants.MILLIS_PER_DAY
-            )
+                // Daily averages for past week
+                val weekStartTime = currentTime - (7 * TimeConstants.MILLIS_PER_DAY)
+                _weekReadings.value = getAverageIntervalReadings(
+                    weekStartTime,
+                    currentTime,
+                    TimeConstants.MILLIS_PER_DAY
+                )
 
-            // Weekly averages for 365 days
-            val monthStartTime = currentTime - (30 * TimeConstants.MILLIS_PER_DAY)
-            _yearReadings.value = getAverageIntervalReadings(
-                monthStartTime,
-                currentTime,
-                TimeConstants.MILLIS_PER_WEEK
-            )
+                // Weekly averages for 365 days
+                val monthStartTime = currentTime - (30 * TimeConstants.MILLIS_PER_DAY)
+                _yearReadings.value = getAverageIntervalReadings(
+                    monthStartTime,
+                    currentTime,
+                    TimeConstants.MILLIS_PER_WEEK
+                )
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 

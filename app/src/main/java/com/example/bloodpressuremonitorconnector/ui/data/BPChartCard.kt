@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.bloodpressuremonitorconnector.data.BPReading
@@ -19,14 +18,6 @@ import com.hd.charts.LineChartView
 import com.hd.charts.common.model.MultiChartDataSet
 import com.hd.charts.style.ChartViewDefaults
 import com.hd.charts.style.LineChartDefaults
-import com.patrykandpatrick.vico.compose.axis.horizontal.rememberBottomAxis
-import com.patrykandpatrick.vico.compose.axis.vertical.rememberStartAxis
-import com.patrykandpatrick.vico.compose.chart.Chart
-import com.patrykandpatrick.vico.compose.chart.line.lineChart
-import com.patrykandpatrick.vico.core.entry.entryModelOf
-import com.patrykandpatrick.vico.core.entry.entryOf
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 @Composable
@@ -48,7 +39,7 @@ fun BPChartCard(
         MultiChartDataSet(
             items = items,
             postfix = "mmHg",
-            categories = sortedReadings.map { it.timestamp.toString() },
+            categories = sortedReadings.map { java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(java.util.Date(it.timestamp)) },
             title = title
         )
     }
