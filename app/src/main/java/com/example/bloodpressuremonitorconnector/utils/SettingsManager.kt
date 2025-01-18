@@ -22,6 +22,7 @@ class SettingsManager (
     val debugMode: Flow<Boolean> = context.dataStore.data.map { preferences ->
             preferences[DEBUG_MODE] ?: false
     }
+
     suspend fun setDebugMode(enabled: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[DEBUG_MODE] = enabled

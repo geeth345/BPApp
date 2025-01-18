@@ -68,7 +68,7 @@ class DataViewModel(
                 )
 
                 // Weekly averages for 365 days
-                val monthStartTime = currentTime - (30 * TimeConstants.MILLIS_PER_DAY)
+                val monthStartTime = currentTime - (365 * TimeConstants.MILLIS_PER_DAY)
                 _yearReadings.value = getAverageIntervalReadings(
                     monthStartTime,
                     currentTime,
