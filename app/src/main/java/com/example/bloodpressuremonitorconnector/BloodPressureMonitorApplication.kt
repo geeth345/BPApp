@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.bloodpressuremonitorconnector.utils.bluetooth.BleContainer
 import com.example.bloodpressuremonitorconnector.utils.SettingsContainer
+import com.example.bloodpressuremonitorconnector.utils.models.ModelsContainer
 
 // BloodPressureMonitorApplication.kt
 class BloodPressureMonitorApplication : Application() {
@@ -25,6 +26,9 @@ class BloodPressureMonitorApplication : Application() {
         Log.d("BloodPressureMonitorApplication", "Initialzing SettingsManager")
         SettingsContainer.initialize(this)
         Log.d("BloodPressureMonitorApplication", "SettingsManager initialised")
+        Log.d("BloodPressureMonitorApplication", "Initialising ModelsManager")
+        ModelsContainer.initialize(this)
+        Log.d("BloodPressureMonitorApplication", "ModelsManager initialised")
         Log.d("BloodPressureMonitorApplication", "Initialisation complete")
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {

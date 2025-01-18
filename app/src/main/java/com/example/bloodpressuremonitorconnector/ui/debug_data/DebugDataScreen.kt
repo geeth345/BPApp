@@ -120,6 +120,36 @@ fun DebugDataScreen(
                 }
             }
 
+            // Prediction Card
+            ElevatedCard(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(
+                        text = "Predicted Blood Pressure",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        StatisticItem(
+                            label = "Systolic",
+                            value = uiState.predictionSystolic?.toString() ?: "-"
+                        )
+                        StatisticItem(
+                            label = "Diastolic",
+                            value = uiState.predictionDiastolic?.toString() ?: "-"
+                        )
+                    }
+                }
+            }
+
             // Statistics Card
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth()

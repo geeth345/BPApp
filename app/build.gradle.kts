@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.chaquopy)
 }
 
 android {
@@ -19,6 +20,11 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        ndk {
+            abiFilters.add("arm64-v8a")
+            abiFilters.add("x86_64")
         }
     }
 
@@ -48,6 +54,20 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+chaquopy {
+    defaultConfig {
+        version = "3.8"
+        pip {
+            options("--extra-index-url", "https://chaquo.com/pypi-13.1")
+            install("numpy==1.24.3")
+            install("scipy==1.10.1")
+            install("scikit-learn==1.2.2")
+        }
+
+
     }
 }
 
