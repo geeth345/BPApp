@@ -12,6 +12,7 @@ class ModelsManager (
 ) {
 
     private var estimator: PyObject? = null
+    private var risk_estimator: PyObject? = null
 
     init {
         intialisePython()
@@ -32,6 +33,9 @@ class ModelsManager (
 
         // create a bp estimator object
         estimator = module.callAttr("BPEstimator")
+
+        // create a risk estimator object
+        risk_estimator = module.callAttr("CVDRiskEstimator")
     }
 
     fun predictBP(sample: List<Float>): BPResult {
@@ -50,6 +54,31 @@ class ModelsManager (
         val diastolic = result.asList()[1].toJava(Int::class.java)
 
         return BPResult(systolic, diastolic)
+    }
+
+    fun predictRisk(sample_systolic: List<Int>, sample_diastolic: List<Int>): Int {
+        if (risk_estimator == null) {
+            Log.e("ModelsManager", "Risk Estimator not initialised")
+            return 0
+        }
+
+        // convert to arrays first
+        val sample_systolic_arr = sample_systolic.toIntArray()
+        val sample_diastolic_arr = sample_diastolic.toIntArray()
+
+        val result = risk_estimator?.callAttr("predict", sample_systolic_arr, sample_diastolic_arr)
+
+
+        if (result == null) {
+            Log.e("ModelsManager", "Error predicting risk")
+            return 0
+        }
+
+        // convert pyobjec to java float
+        val risk: Float = result.toJava(Float::class.java)
+
+        // convert to int and return
+        return risk.toInt()
     }
 
     fun cleanup() {

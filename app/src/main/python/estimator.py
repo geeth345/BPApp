@@ -160,3 +160,54 @@ class BPEstimator:
         except Exception as e:
             print(f"Error processing signal: {str(e)}")
             return None
+
+
+class CVDRiskEstimator:
+    def __init__(self):
+        # Initialise the risk estimation model
+        self.risk_model = None
+
+    def predict(self, samples_systolic, samples_diastolic):
+        # Predict the risk of cardiovascular disease given a list of blood pressure measurements
+        # collected over the course of a month
+        # takes two lists of ints
+        
+        # Convert Java List to Python list using the tolist() method
+        systolic_list = list(samples_systolic)
+        diastolic_list = list(samples_diastolic)
+
+        # Placeholder measurements
+        avg_systolic = sum(systolic_list) / len(systolic_list)
+        avg_diastolic = sum(diastolic_list) / len(diastolic_list)
+
+        # Calculate systolic risk
+        if avg_systolic < 120:
+            systolic_risk = 0
+        elif avg_systolic < 130:
+            systolic_risk = 20
+        elif avg_systolic < 140:
+            systolic_risk = 40
+        elif avg_systolic < 160:
+            systolic_risk = 60
+        elif avg_systolic < 180:
+            systolic_risk = 80
+        else:
+            systolic_risk = 100
+
+        # Calculate diastolic risk
+        if avg_diastolic < 80:
+            diastolic_risk = 0
+        elif avg_diastolic < 85:
+            diastolic_risk = 20
+        elif avg_diastolic < 90:
+            diastolic_risk = 40
+        elif avg_diastolic < 100:
+            diastolic_risk = 60
+        elif avg_diastolic < 110:
+            diastolic_risk = 80
+        else:
+            diastolic_risk = 100
+
+        # Return average risk
+        return (systolic_risk + diastolic_risk) / 2
+

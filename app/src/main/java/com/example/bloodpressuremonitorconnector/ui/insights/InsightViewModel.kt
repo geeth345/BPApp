@@ -10,6 +10,8 @@ import com.example.bloodpressuremonitorconnector.BloodPressureMonitorApplication
 import com.example.bloodpressuremonitorconnector.data.BPDao
 import com.example.bloodpressuremonitorconnector.data.BPDatabase
 import com.example.bloodpressuremonitorconnector.data.BPReading
+import com.example.bloodpressuremonitorconnector.utils.models.ModelsContainer
+import com.example.bloodpressuremonitorconnector.utils.models.ModelsManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +43,8 @@ class InsightsViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(InsightsUiState())
     val uiState: StateFlow<InsightsUiState> = _uiState.asStateFlow()
+
+    private val modelsManager: ModelsManager = ModelsContainer.getModelsManager()
 
     init {
         loadInsights()
@@ -87,26 +91,10 @@ class InsightsViewModel(
     private fun calculateCvdRisk(avgSystolic: Int, avgDiastolic: Int): Int {
         // placeholder risk calculation, eventually gonna use a python implementation of some ML
         // model to get these values
+        val risk = modelsManager.predictRisk(listOf(avgSystolic), listOf(avgDiastolic))
 
-        val systolicRisk = when {
-            avgSystolic < 120 -> 0
-            avgSystolic < 130 -> 20
-            avgSystolic < 140 -> 40
-            avgSystolic < 160 -> 60
-            avgSystolic < 180 -> 80
-            else -> 100
-        }
+        return risk
 
-        val diastolicRisk = when {
-            avgDiastolic < 80 -> 0
-            avgDiastolic < 85 -> 20
-            avgDiastolic < 90 -> 40
-            avgDiastolic < 100 -> 60
-            avgDiastolic < 110 -> 80
-            else -> 100
-        }
-
-        return (systolicRisk + diastolicRisk) / 2
     }
 
     private fun calculateStressScore(readings: List<BPReading>): Int {
