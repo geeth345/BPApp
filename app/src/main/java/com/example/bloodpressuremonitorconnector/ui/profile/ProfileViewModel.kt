@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.bloodpressuremonitorconnector.BloodPressureMonitorApplication
 import com.example.bloodpressuremonitorconnector.utils.SettingsContainer
 import com.example.bloodpressuremonitorconnector.utils.SettingsManager
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -49,6 +50,13 @@ class ProfileViewModel(
             weightKg = weightKg ?: currentState.weightKg,
             isEditing = false
         )
+        viewModelScope.launch {
+            settingsManager.setName(name ?: currentState.name)
+            settingsManager.setEmail(email ?: currentState.email)
+            settingsManager.setHeight(heightCm ?: currentState.heightCm)
+            settingsManager.setWeight(weightKg ?: currentState.weightKg)
+        }
+
     }
 
     companion object {

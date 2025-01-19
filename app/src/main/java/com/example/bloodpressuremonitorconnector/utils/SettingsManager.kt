@@ -16,6 +16,10 @@ class SettingsManager (
         private val DEBUG_MODE = booleanPreferencesKey("debug_mode")
         private val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
         private val MEASUREMENT_INTERVAL = intPreferencesKey("measurement_interval")
+        private val NAME = stringPreferencesKey("name")
+        private val EMAIL = stringPreferencesKey("email")
+        private val HEIGHT = intPreferencesKey("height")
+        private val WEIGHT = intPreferencesKey("weight")
     }
 
     // debug mode setting
@@ -48,5 +52,49 @@ class SettingsManager (
             preferences[MEASUREMENT_INTERVAL] = interval
         }
     }
+
+    // Profile Information (name, email, height, weight) - set on profile screen
+
+    // Name
+    val name: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[NAME] ?: "John Doe"
+    }
+    suspend fun setName(name: String) {
+        context.dataStore.edit { preferences ->
+            preferences[NAME] = name
+        }
+    }
+
+    // Email
+    val email: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[EMAIL] ?: "email@example.com" }
+    suspend fun setEmail(email: String) {
+        context.dataStore.edit { preferences ->
+            preferences[EMAIL] = email
+        }
+    }
+
+    // Height
+    val height: Flow<Int> = context.dataStore.data.map { preferences ->
+        preferences[HEIGHT] ?: 175
+    }
+    suspend fun setHeight(height: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[HEIGHT] = height
+        }
+    }
+
+    // Weight
+    val weight: Flow<Int> = context.dataStore.data.map { preferences ->
+        preferences[WEIGHT] ?: 70
+    }
+    suspend fun setWeight(weight: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[WEIGHT] = weight
+        }
+    }
+
+
+
 
 }
