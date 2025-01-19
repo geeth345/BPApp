@@ -141,11 +141,15 @@ class BleManager(
             if (characteristic.uuid.toString().equals(BleConstants.SENSOR_CHAR_UUID, ignoreCase = true)) {
                 // Convert byte array to Int16 array, since board sends 16-bit samples
                 val samples = value.toShortArray()
+                var count = 0
                 samples.forEach { sample ->
-                    val voltage = (sample.toFloat())
-                    coroutineScope.launch {
-                        _sensorData.emit(voltage)
+                    if (count % 2 != 0) {
+                        val voltage = (sample.toFloat())
+                        coroutineScope.launch {
+                            _sensorData.emit(voltage)
+                        }
                     }
+                    count++
                 }
                 Log.d("BleManager", "Received ${samples.size} samples")
             }

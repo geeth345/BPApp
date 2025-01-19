@@ -24,7 +24,8 @@ import com.hd.charts.style.LineChartDefaults
 fun BPChartCard(
     readings: List<BPReading>,
     modifier: Modifier = Modifier,
-    title: String = "Chart"
+    title: String = "Chart",
+    dateFormat: String = "yyyy-MM-dd HH:mm"
 ) {
     // Sort readings by timestamp to ensure proper chronological order
     val sortedReadings = remember(readings) {
@@ -39,27 +40,12 @@ fun BPChartCard(
         MultiChartDataSet(
             items = items,
             postfix = "mmHg",
-            categories = sortedReadings.map { java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(java.util.Date(it.timestamp)) },
+            categories = sortedReadings.map { java.text.SimpleDateFormat(dateFormat).format(java.util.Date(it.timestamp)) },
             title = title
         )
     }
-
-
-
-    ElevatedCard(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
+    when (sortedReadings.size > 2) {
+        true -> {
             LineChartView(
                 dataSet = chartDataSet,
                 style = LineChartDefaults.style(
@@ -74,5 +60,47 @@ fun BPChartCard(
                 )
             )
         }
+        false -> {
+            ElevatedCard() {
+                Text(
+                    text = "Not enough data to display chart - keep using your monitor and check back later!",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
     }
+
+
+
+
+//    ElevatedCard(
+//        modifier = modifier.fillMaxWidth()
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .padding(16.dp)
+//                .fillMaxWidth()
+//        ) {
+//            Text(
+//                text = title,
+//                style = MaterialTheme.typography.titleMedium,
+//                modifier = Modifier.padding(bottom = 16.dp)
+//            )
+//
+//            LineChartView(
+//                dataSet = chartDataSet,
+//                style = LineChartDefaults.style(
+//                    lineColors = listOf(
+//                        MaterialTheme.colorScheme.primary,
+//                        MaterialTheme.colorScheme.secondary
+//                    ),
+//                    dragPointVisible = false,
+//                    pointVisible = true,
+//                    pointSize = 6f,
+//                    chartViewStyle = ChartViewDefaults.style()
+//                )
+//            )
+//        }
+//    }
 }

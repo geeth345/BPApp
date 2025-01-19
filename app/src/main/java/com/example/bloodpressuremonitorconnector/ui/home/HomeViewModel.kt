@@ -18,6 +18,7 @@ import com.example.bloodpressuremonitorconnector.data.MockDataLoader
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -35,8 +36,10 @@ class HomeViewModel(
     private val _latestReading = MutableStateFlow<BPReading?>(null)
     val latestReading: StateFlow<BPReading?> = _latestReading.asStateFlow()
 
+    private val _userName = MutableStateFlow<String?>(null)
+    val userName: StateFlow<String?> = _userName.asStateFlow()
 
-    // Collect relevant changes
+
     init {
         // settings
         viewModelScope.launch {
@@ -53,6 +56,12 @@ class HomeViewModel(
         // get the latest reading from db
         viewModelScope.launch {
             fetchLatestReading()
+        }
+        // username
+        viewModelScope.launch {
+            settingsManager.name.collect { name ->
+                _userName.value = name
+            }
         }
     }
 

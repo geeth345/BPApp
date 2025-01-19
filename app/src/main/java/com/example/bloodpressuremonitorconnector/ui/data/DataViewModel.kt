@@ -16,12 +16,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+enum class ChartTimeFrame {
+    DAY, WEEK, YEAR
+}
 
 class DataViewModel(
     private val bpDao: BPDao
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _selectedTimeFrame = MutableStateFlow(ChartTimeFrame.DAY)
+    val selectedTimeFrame: StateFlow<ChartTimeFrame> = _selectedTimeFrame.asStateFlow()
 
     private val _readings = MutableStateFlow<List<BPReading>>(emptyList())
     val readings: StateFlow<List<BPReading>> = _readings.asStateFlow()
@@ -35,6 +41,7 @@ class DataViewModel(
     private val _yearReadings = MutableStateFlow<List<BPReading>>(emptyList())
     val yearReadings: StateFlow<List<BPReading>> = _yearReadings.asStateFlow()
 
+
     init {
         loadData()
     }
@@ -44,6 +51,11 @@ class DataViewModel(
         const val MILLIS_PER_DAY = 24L * MILLIS_PER_HOUR
         const val MILLIS_PER_WEEK = 7L * MILLIS_PER_DAY
     }
+
+    fun setTimeFrame(timeFrame: ChartTimeFrame) {
+        _selectedTimeFrame.value = timeFrame
+    }
+
 
     fun loadData() {
         viewModelScope.launch {
@@ -68,7 +80,7 @@ class DataViewModel(
                 )
 
                 // Weekly averages for 365 days
-                val monthStartTime = currentTime - (30 * TimeConstants.MILLIS_PER_DAY)
+                val monthStartTime = currentTime - (365 * TimeConstants.MILLIS_PER_DAY)
                 _yearReadings.value = getAverageIntervalReadings(
                     monthStartTime,
                     currentTime,
