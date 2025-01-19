@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
@@ -32,7 +33,10 @@ fun InsightsScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    modifier = Modifier.size(64.dp),
+                    strokeWidth = 6.dp
+                )
             }
         } else {
             LazyColumn(
@@ -44,33 +48,23 @@ fun InsightsScreen(
                 item {
                     Text(
                         text = "Health Insights",
-                        style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        ),
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
 
-                // CVD Risk Score
-                item {
-                    CvdRiskCard(cvdRiskScore = uiState.cvdRiskScore)
-                }
-
-                // Stress Level
-                item {
-                    StressLevelCard(stressScore = uiState.stressScore)
-                }
-
-                // BP Average Card
+                item { CvdRiskCard(cvdRiskScore = uiState.cvdRiskScore) }
+                item { StressLevelCard(stressScore = uiState.stressScore) }
                 item {
                     BPAverageCard(
                         avgSystolic = uiState.averageSystolic,
                         avgDiastolic = uiState.averageDiastolic
                     )
                 }
-
-                // Insights
-                items(uiState.insights) { insight ->
-                    InsightCard(insight = insight)
-                }
+                items(uiState.insights) { insight -> InsightCard(insight = insight) }
             }
         }
     }
@@ -84,21 +78,23 @@ fun CvdRiskCard(cvdRiskScore: Int) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(24.dp)  // Increased padding
         ) {
             Text(
                 text = "Cardiovascular Health Assessment",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))  // Increased spacing
 
             LinearProgressIndicator(
                 progress = { cvdRiskScore / 100f },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(8.dp),
+                    .height(12.dp),  // Thicker progress bar
                 color = when {
                     cvdRiskScore < 30 -> MaterialTheme.colorScheme.primary
                     cvdRiskScore < 60 -> MaterialTheme.colorScheme.tertiary
@@ -106,17 +102,24 @@ fun CvdRiskCard(cvdRiskScore: Int) {
                 },
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Assessment Score: $cvdRiskScore%",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Medium
+                )
             )
 
             Text(
                 text = getRiskDescription(cvdRiskScore),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 18.sp,
+                    lineHeight = 24.sp
+                ),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp)
             )
         }
     }
@@ -130,21 +133,23 @@ fun StressLevelCard(stressScore: Int) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(24.dp)
         ) {
             Text(
                 text = "Stress Level Indicator",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             LinearProgressIndicator(
                 progress = { stressScore / 100f },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(8.dp),
+                    .height(12.dp),
                 color = when {
                     stressScore < 30 -> MaterialTheme.colorScheme.primary
                     stressScore < 60 -> MaterialTheme.colorScheme.tertiary
@@ -152,17 +157,24 @@ fun StressLevelCard(stressScore: Int) {
                 },
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Current Level: $stressScore%",
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Medium
+                )
             )
 
             Text(
                 text = getStressDescription(stressScore),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 18.sp,
+                    lineHeight = 24.sp
+                ),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp)
             )
         }
     }
@@ -176,15 +188,17 @@ fun BPAverageCard(avgSystolic: Int, avgDiastolic: Int) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(24.dp)
         ) {
             Text(
                 text = "Blood Pressure Overview",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -193,34 +207,45 @@ fun BPAverageCard(avgSystolic: Int, avgDiastolic: Int) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = avgSystolic.toString(),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = "Systolic",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 20.sp
+                        )
                     )
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = avgDiastolic.toString(),
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = "Diastolic",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontSize = 20.sp
+                        )
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = getBPDescription(avgSystolic, avgDiastolic),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 18.sp,
+                    lineHeight = 24.sp
+                ),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 24.dp)
             )
         }
     }
@@ -234,7 +259,7 @@ fun InsightCard(insight: BPInsight) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -242,14 +267,18 @@ fun InsightCard(insight: BPInsight) {
                 Icon(
                     imageVector = Icons.Default.Warning,
                     contentDescription = "Action Suggested",
-                    tint = MaterialTheme.colorScheme.secondary
+                    tint = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.size(32.dp)  // Larger icon
                 )
             }
 
             Column {
                 Text(
                     text = insight.title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
                     color = when (insight.severity) {
                         InsightSeverity.LOW -> MaterialTheme.colorScheme.primary
                         InsightSeverity.MEDIUM -> MaterialTheme.colorScheme.tertiary
@@ -258,7 +287,10 @@ fun InsightCard(insight: BPInsight) {
                 )
                 Text(
                     text = insight.description,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontSize = 18.sp,
+                        lineHeight = 24.sp
+                    ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
