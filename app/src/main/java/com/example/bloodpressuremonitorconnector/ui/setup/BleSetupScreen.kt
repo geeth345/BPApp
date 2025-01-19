@@ -64,7 +64,7 @@ fun BleSetupScreen(
                 val requiredPermissions = (permissionState as BlePermissionState.RequiresPermissions).permissions
                 Log.d("BleSetupScreen", "Requesting permissions: $requiredPermissions")
 
-                Text("This app needs permissions to scan for and connect to your blood pressure sensor")
+                Text("This app needs your permission to scan for and connect to your blood pressure sensor. After pressing the button, you'll be asked if you are okay with this.")
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
@@ -75,7 +75,7 @@ fun BleSetupScreen(
                 }
             }
             is BlePermissionState.ShowRationale -> {
-                Text("The requested permissions are required for the app to function properly")
+                Text("The requested permissions are required for the app to take measurements, please grant them on the next screen")
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
@@ -87,7 +87,7 @@ fun BleSetupScreen(
                 }
             }
             is BlePermissionState.RequiresBluetooth -> {
-                Text("Please enable Bluetooth to continue")
+                Text("Bluetooth needs to be turned on to connect to your sensor. Please enable it on the next screen.")
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
@@ -107,14 +107,14 @@ fun BleSetupScreen(
                     }
 
                     is BleConnectionState.BluetoothOff -> {
-                        Text("Please turn on Bluetooth")
+                        Text("Please turn on Bluetooth, we use it to talk to your blood pressure sensor")
                         Button(onClick = { viewModel.startSetup() }) {
                             Text("Retry")
                         }
                     }
 
                     is BleConnectionState.DeviceOff -> {
-                        Text("Please turn on your blood pressure sensor")
+                        Text("We couldn't find your device, please make sure it's turned on and nearby")
                         Button(onClick = { viewModel.startSetup() }) {
                             Text("Scan Again")
                         }
@@ -122,20 +122,21 @@ fun BleSetupScreen(
 
                     is BleConnectionState.Scanning -> {
                         CircularProgressIndicator()
-                        Text("Scanning for device...")
+                        Text("We're looking for your device...")
                     }
 
                     is BleConnectionState.DeviceFound -> {
                         CircularProgressIndicator()
-                        Text("Connecting to device...")
+                        Text("Good news! We found your device, connecting now...")
                     }
 
                     is BleConnectionState.Connected -> {
-                        Text("Connected successfully!")
+                        Text("You're all set up! Your device is connected and ready to take measurements.")
                     }
 
                     is BleConnectionState.Error -> {
-                        Text((connectionState as BleConnectionState.Error).message)
+                        Text("Something seems to have gone wrong. Please try again, and if that doesn't work please contact support.")
+                        //Text((connectionState as BleConnectionState.Error).message)
                         Button(onClick = { viewModel.startSetup() }) {
                             Text("Retry")
                         }
