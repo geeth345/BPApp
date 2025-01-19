@@ -70,7 +70,10 @@ fun HomeScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "BPConnect",
-                            fontWeight = FontWeight.Bold
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.ExtraBold
+                            )
                         )
                     }
                 }
@@ -102,7 +105,10 @@ fun HomeScreen(
                     ) {
                         Text(
                             text = "${timeBasedGreeting()},\n${userName ?: ""}",
-                            style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+                            style = MaterialTheme.typography.headlineLarge.copy(
+                                fontSize = 32.sp,
+                                fontWeight = FontWeight.Bold,
+                            ),
                             modifier = Modifier.padding(bottom = 16.dp)
                         )
                     }
@@ -120,7 +126,7 @@ fun HomeScreen(
                                 Icon(
                                     imageVector = Icons.Filled.CheckCircleOutline,
                                     contentDescription = "Device Connected",
-                                    tint = MaterialTheme.colorScheme.primary,
+                                    tint = nice_green,
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .size(64.dp)
@@ -129,7 +135,7 @@ fun HomeScreen(
                                 Icon(
                                     imageVector = Icons.Filled.NotInterested,
                                     contentDescription = "Device Not Connected",
-                                    tint = MaterialTheme.colorScheme.error,
+                                    tint = nice_red,
                                     modifier = Modifier
                                         .padding(16.dp)
                                         .size(64.dp)
@@ -144,7 +150,10 @@ fun HomeScreen(
                             ) {
                                 Text(
                                     text = "Device Status",
-                                    style = MaterialTheme.typography.titleLarge,
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.Bold
+                                    ),
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
@@ -153,7 +162,10 @@ fun HomeScreen(
                                         is BleConnectionState.Connected -> "Device connected"
                                         else -> "Setup Required"
                                     },
-                                    style = MaterialTheme.typography.bodyLarge,
+                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Medium
+                                    ),
                                     color = if (connectionState is BleConnectionState.Connected)
                                         MaterialTheme.colorScheme.primary
                                     else
@@ -189,7 +201,10 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text = "Latest Measurements",
-                                style = MaterialTheme.typography.titleLarge,
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    fontSize = 28.sp,
+                                    fontWeight = FontWeight.Bold
+                                ),
                             )
                             when (latestReading) {
                                 null -> {
@@ -209,7 +224,10 @@ fun HomeScreen(
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                             Text(
                                                 text = latestReading?.systolic?.toString() ?: "?",
-                                                style = MaterialTheme.typography.headlineMedium,
+                                                style = MaterialTheme.typography.headlineMedium.copy(
+                                                    fontSize = 40.sp,
+                                                    fontWeight = FontWeight.Bold
+                                                ),
                                                 color = MaterialTheme.colorScheme.primary
                                             )
                                             Text(
@@ -220,7 +238,10 @@ fun HomeScreen(
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                             Text(
                                                 text = latestReading?.diastolic?.toString() ?: "?",
-                                                style = MaterialTheme.typography.headlineMedium,
+                                                style = MaterialTheme.typography.headlineMedium.copy(
+                                                    fontSize = 40.sp,
+                                                    fontWeight = FontWeight.Bold
+                                                ),
                                                 color = MaterialTheme.colorScheme.primary
                                             )
                                             Text(
@@ -235,7 +256,7 @@ fun HomeScreen(
                                             .withZone(ZoneId.systemDefault())
                                     Text(
                                         text = "Measured at: ${formatter.format(instant)}",
-                                        style = MaterialTheme.typography.bodySmall,
+                                        style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.padding(top = 8.dp)
                                     )
@@ -268,7 +289,10 @@ fun HomeScreen(
                             ) {
                                 Text(
                                     text = "Insights",
-                                    style = MaterialTheme.typography.titleLarge
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.Bold
+                                    ),
                                 )
                                 Text(
                                     text = "View insights and trends from your measurements",
@@ -307,8 +331,11 @@ fun HomeScreen(
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 Text(
-                                    text = "Share Data",
-                                    style = MaterialTheme.typography.titleLarge
+                                    text = "Data Sharing",
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.Bold
+                                    ),
                                 )
                                 Text(
                                     text = "Share your measurements with healthcare providers",
@@ -346,7 +373,10 @@ fun HomeScreen(
                             ) {
                                 Text(
                                     text = "Settings",
-                                    style = MaterialTheme.typography.titleLarge
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.Bold
+                                    ),
                                 )
                                 Text(
                                     text = "Configure app and device settings",
@@ -373,7 +403,10 @@ fun HomeScreen(
                             ) {
                                 Text(
                                     text = "Debug Data",
-                                    style = MaterialTheme.typography.titleLarge
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.Bold
+                                    ),
                                 )
                                 Text(
                                     text = "View data stream from device for debugging purposes. " +
@@ -400,7 +433,10 @@ fun HomeScreen(
                             ) {
                                 Text(
                                     text = "Load Mock Data",
-                                    style = MaterialTheme.typography.titleLarge
+                                    style = MaterialTheme.typography.titleLarge.copy(
+                                        fontSize = 28.sp,
+                                        fontWeight = FontWeight.Bold
+                                    ),
                                 )
                                 Text(
                                     text = "Tap to load mock data into the database for testing purposes",
