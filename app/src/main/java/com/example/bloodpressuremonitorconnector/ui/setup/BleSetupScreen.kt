@@ -6,6 +6,17 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.BluetoothSearching
+import androidx.compose.material.icons.filled.BluetoothDisabled
+import androidx.compose.material.icons.filled.BluetoothSearching
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.QuestionMark
+import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.Pending
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -62,7 +73,14 @@ fun BleSetupScreen(
         when (permissionState) {
             is BlePermissionState.RequiresPermissions -> {
                 val requiredPermissions = (permissionState as BlePermissionState.RequiresPermissions).permissions
-
+                Icon(
+                    imageVector = Icons.Filled.Security,
+                    contentDescription = "Permissions Required",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(bottom = 24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
                 Text(
                     text = "This app needs your permission to scan for and connect to your blood pressure sensor. After pressing the button, you'll be asked if you are okay with this.",
                     style = MaterialTheme.typography.bodyLarge.copy(
@@ -91,6 +109,15 @@ fun BleSetupScreen(
             }
 
             is BlePermissionState.ShowRationale -> {
+                Icon(
+                    imageVector = Icons.Filled.Warning,
+                    contentDescription = "Permission Rationale",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(bottom = 24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+
                 Text(
                     text = "The requested permissions are required for the app to take measurements, please grant them on the next screen",
                     style = MaterialTheme.typography.bodyLarge.copy(
@@ -120,6 +147,15 @@ fun BleSetupScreen(
             }
 
             is BlePermissionState.RequiresBluetooth -> {
+                Icon(
+                    imageVector = Icons.Filled.BluetoothDisabled,
+                    contentDescription = "Bluetooth Required",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(bottom = 24.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+
                 Text(
                     text = "Bluetooth needs to be turned on to connect to your sensor. Please enable it on the next screen.",
                     style = MaterialTheme.typography.bodyLarge.copy(
@@ -150,6 +186,15 @@ fun BleSetupScreen(
             is BlePermissionState.AllGranted -> {
                 when (connectionState) {
                     is BleConnectionState.Initial -> {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.BluetoothSearching,
+                            contentDescription = "Start Setup",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .padding(bottom = 24.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+
                         Button(
                             onClick = { viewModel.startSetup() },
                             modifier = Modifier
@@ -167,6 +212,15 @@ fun BleSetupScreen(
                     }
 
                     is BleConnectionState.BluetoothOff -> {
+                        Icon(
+                            imageVector = Icons.Filled.BluetoothDisabled,
+                            contentDescription = "Bluetooth Off",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .padding(bottom = 24.dp),
+                            tint = MaterialTheme.colorScheme.error
+                        )
+
                         Text(
                             text = "Please turn on Bluetooth, we use it to talk to your blood pressure sensor",
                             style = MaterialTheme.typography.bodyLarge.copy(
@@ -193,6 +247,15 @@ fun BleSetupScreen(
                     }
 
                     is BleConnectionState.DeviceOff -> {
+                        Icon(
+                            imageVector = Icons.Filled.QuestionMark,
+                            contentDescription = "Device Not Found",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .padding(bottom = 24.dp),
+                            tint = MaterialTheme.colorScheme.error
+                        )
+
                         Text(
                             text = "We couldn't find your device, please make sure it's turned on and nearby",
                             style = MaterialTheme.typography.bodyLarge.copy(
@@ -249,6 +312,15 @@ fun BleSetupScreen(
                     }
 
                     is BleConnectionState.Connected -> {
+                        Icon(
+                            imageVector = Icons.Filled.CheckCircle,
+                            contentDescription = "Setup Complete",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .padding(bottom = 24.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+
                         Text(
                             text = "You're all set up! Your device is connected and ready to take measurements.",
                             style = MaterialTheme.typography.bodyLarge.copy(
@@ -260,6 +332,14 @@ fun BleSetupScreen(
                     }
 
                     is BleConnectionState.Error -> {
+                        Icon(
+                            imageVector = Icons.Filled.Error,
+                            contentDescription = "Setup Error",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .padding(bottom = 24.dp),
+                            tint = MaterialTheme.colorScheme.error
+                        )
                         Text(
                             text = "Something seems to have gone wrong. Please try again, and if that doesn't work please contact support.",
                             style = MaterialTheme.typography.bodyLarge.copy(
@@ -283,6 +363,10 @@ fun BleSetupScreen(
                                 )
                             )
                         }
+                        Text(
+                            text = "To share with support: ${(connectionState as BleConnectionState.Error).message}",
+                            modifier = Modifier.padding(bottom = 24.dp)
+                        )
                     }
                 }
             }
