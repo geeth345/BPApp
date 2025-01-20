@@ -100,10 +100,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.material3)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.vico.compose)
-    implementation(libs.vico.compose.m3)
-    implementation(libs.vico.core)
-    implementation(libs.vico.views)
     implementation(libs.opencsv)
     implementation(libs.charts)
 

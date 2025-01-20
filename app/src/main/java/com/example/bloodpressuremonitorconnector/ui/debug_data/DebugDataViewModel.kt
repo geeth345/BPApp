@@ -34,6 +34,8 @@ class DebugDataViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(DataScreenState())
     val uiState: StateFlow<DataScreenState> = _uiState.asStateFlow()
 
+    var dataPointCount: Int = 0
+
 
     init {
         viewModelScope.launch {
@@ -81,15 +83,25 @@ class DebugDataViewModel : ViewModel() {
         val currentMax = maxOf(_uiState.value.maxValue, value)
         val currentMin = minOf(_uiState.value.minValue, value)
 
-        val prediction = getPrediction()
+        if (dataPointCount % 1000 == 0) {
+            val prediction = getPrediction()
+            _uiState.value = _uiState.value.copy(
+                dataPoints = currentPoints,
+                maxValue = currentMax,
+                minValue = currentMin,
+                predictionSystolic = prediction.systolic,
+                predictionDiastolic = prediction.diastolic
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                dataPoints = currentPoints,
+                maxValue = currentMax,
+                minValue = currentMin
+            )
+        }
 
-        _uiState.value = _uiState.value.copy(
-            dataPoints = currentPoints,
-            maxValue = currentMax,
-            minValue = currentMin,
-            predictionSystolic = prediction.systolic,
-            predictionDiastolic = prediction.diastolic
-        )
+        dataPointCount++
+
     }
 
     fun getPrediction(): BPResult {
