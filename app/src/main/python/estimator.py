@@ -111,7 +111,7 @@ class BPEstimator:
 
         self.processor = SignalProcessor()
 
-    def predict(self, features):
+    def predict(self, sample_list):
         """
         Predict BP values from extracted features
         Args:
@@ -119,6 +119,8 @@ class BPEstimator:
         Returns:
             Tuple of (systolic_bp, diastolic_bp)
         """
+
+
         feature_names = ['heart_rate', 'systolic_peak', 'dicrotic_peak',
                         'diastolic_point1', 'diastolic_point2', 'dicrotic_notch',
                         'max_slope', 'augmentation_index', 'T1', 'T2', 'T3']
@@ -131,7 +133,7 @@ class BPEstimator:
 
         return sbp, dbp
 
-    def process_signal(self, raw_signal, fs=125):
+    def process_signal(self, raw_signal, fs=200):
         """
         Main function to process raw signal and estimate blood pressure
         Args:
@@ -149,6 +151,7 @@ class BPEstimator:
                 return None
 
             # Use first complete pulse for estimation
+            # TODO: Could using multiple and then averaging improve performance?
             features = features_list[0]
 
             # Load pre-trained model and estimate BP
@@ -159,7 +162,7 @@ class BPEstimator:
 
         except Exception as e:
             print(f"Error processing signal: {str(e)}")
-            return None
+            return (0, 0)
 
 
 class CVDRiskEstimator:

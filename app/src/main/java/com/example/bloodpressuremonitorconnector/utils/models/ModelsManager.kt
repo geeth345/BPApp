@@ -39,11 +39,14 @@ class ModelsManager (
     }
 
     fun predictBP(sample: List<Float>): BPResult {
+        // convert the list to an array
+        var sample_array = sample.toFloatArray()
+
         if (estimator == null) {
             Log.e("ModelsManager", "Estimator not initialised")
             return BPResult(0, 0)
         }
-        val result = estimator?.callAttr("predict", sample)
+        val result = estimator?.callAttr("process_signal", sample_array)
         if (result == null) {
             Log.e("ModelsManager", "Error predicting BP")
             return BPResult(0, 0)
