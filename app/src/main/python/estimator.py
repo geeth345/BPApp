@@ -3,6 +3,7 @@ from scipy.signal import butter, filtfilt, find_peaks
 import pickle
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import GradientBoostingRegressor
+from os.path import dirname, join
 
 class SignalProcessor:
     def __init__(self, fs=125):
@@ -92,14 +93,17 @@ class SignalProcessor:
         return features_list
 
 class BPEstimator:
-    def __init__(self, model_path=None):
+    def __init__(self, model_path="model.pkl"):
         """
         Initialize BP estimator with optional pre-trained model
         Args:
             model_path: Path to saved model file (if None, creates new model)
         """
+
+
         if model_path:
-            with open(model_path, 'rb') as f:
+            real_path = join(dirname(__file__), model_path)
+            with open(real_path, 'rb') as f:
                 saved_data = pickle.load(f)
                 self.scaler = saved_data['scaler']
                 self.sbp_model = saved_data['sbp_model']
@@ -125,13 +129,14 @@ class BPEstimator:
                         'diastolic_point1', 'diastolic_point2', 'dicrotic_notch',
                         'max_slope', 'augmentation_index', 'T1', 'T2', 'T3']
 
-        X = np.array([[features[name] for name in feature_names]])
+        X = np.array([[sample_list[name] for name in feature_names]])
         X_scaled = self.scaler.transform(X)
 
         sbp = self.sbp_model.predict(X_scaled)[0]
         dbp = self.dbp_model.predict(X_scaled)[0]
 
-        return sbp, dbp
+        return (int(round(sbp)), int(round(dbp)))
+
 
     def process_signal(self, raw_signal, fs=200):
         """
@@ -147,16 +152,15 @@ class BPEstimator:
             filtered_signal = self.processor.bandpass_filter(signal)
             features_list = self.processor.extract_features(filtered_signal)
 
-            if not features_list:
-                return None
+            if not features_list or len(features_list) == 0:
+                return (0, 0)
 
             # Use first complete pulse for estimation
             # TODO: Could using multiple and then averaging improve performance?
             features = features_list[0]
 
             # Load pre-trained model and estimate BP
-            estimator = BPEstimator("model.pkl")  # You'll need to provide the trained model
-            sbp, dbp = estimator.predict(features)
+            sbp, dbp = self.predict(features)
 
             return sbp, dbp
 
@@ -170,7 +174,7 @@ class CVDRiskEstimator:
         # Initialise the risk estimation model
         self.risk_model = None
 
-    def predict(self, samples_systolic, samples_diastolic):
+def predict(self, samples_systolic, samples_diastolic):
         # Predict the risk of cardiovascular disease given a list of blood pressure measurements
         # collected over the course of a month
         # takes two lists of ints

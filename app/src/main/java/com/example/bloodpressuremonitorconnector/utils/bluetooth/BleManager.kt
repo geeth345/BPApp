@@ -13,7 +13,9 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Intent
 import android.util.Log
+import com.example.bloodpressuremonitorconnector.utils.BPProcessor
 import com.example.bloodpressuremonitorconnector.utils.bluetooth.state.BleConnectionState
+import com.example.bloodpressuremonitorconnector.utils.models.ModelsContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +43,7 @@ class BleManager(
     private val _sensorData = MutableStateFlow<Float>(0.0F)
     val sensorData: SharedFlow<Float> = _sensorData.asSharedFlow()
 
+    private val bpProcessor = BPProcessor.getInstance(context)
 
     private var bluetoothGatt: BluetoothGatt? = null
     private var isScanning = false
@@ -147,11 +150,13 @@ class BleManager(
                         val voltage = (sample.toFloat())
                         coroutineScope.launch {
                             _sensorData.emit(voltage)
+                            // bpProcessor.processSample(voltage)
                         }
                     }
                     count++
                 }
                 Log.d("BleManager", "Received ${samples.size} samples")
+                //bpProcessor.batchProcessSample(samples.map { it.toFloat() })
             }
         }
     }

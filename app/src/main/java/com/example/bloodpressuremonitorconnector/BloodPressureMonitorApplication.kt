@@ -20,15 +20,15 @@ class BloodPressureMonitorApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Log.d("BloodPressureMonitorApplication", "onCreate")
+        Log.d("BloodPressureMonitorApplication", "Initialising ModelsManager")
+        ModelsContainer.initialize(this)
+        Log.d("BloodPressureMonitorApplication", "ModelsManager initialised")
         Log.d("BloodPressureMonitorApplication", "Initializing BleContainer")
         BleContainer.initialize(this)
         Log.d("BloodPressureMonitorApplication", "BleContainer initialized")
         Log.d("BloodPressureMonitorApplication", "Initialzing SettingsManager")
         SettingsContainer.initialize(this)
         Log.d("BloodPressureMonitorApplication", "SettingsManager initialised")
-        Log.d("BloodPressureMonitorApplication", "Initialising ModelsManager")
-        ModelsContainer.initialize(this)
-        Log.d("BloodPressureMonitorApplication", "ModelsManager initialised")
         Log.d("BloodPressureMonitorApplication", "Initialisation complete")
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
